@@ -68,6 +68,60 @@ ggplot(CO2, aes(uptake)) +
 ggplot(CO2, aes(uptake, fill = Type)) +
       geom_histogram(binwidth = 5)
 
+## geom_crossbar(), geom_errorbar(), geom_linerange() un geom_pointrange()
+library(dplyr)
+CO2_summary <- CO2 %>%
+      group_by(Type) %>%
+      summarise(
+            mean_uptake = mean(uptake),
+            sd_uptake = sd(uptake)
+      )
+CO2_summary
+
+ggplot(
+      CO2_summary,
+      aes(
+            x = Type,
+            y = mean_uptake,
+            ymin = mean_uptake - sd_uptake,
+            ymax = mean_uptake + sd_uptake
+      )
+) +
+      geom_crossbar()
+
+ggplot(
+      CO2_summary,
+      aes(
+            x = Type,
+            y = mean_uptake,
+            ymin = mean_uptake - sd_uptake,
+            ymax = mean_uptake + sd_uptake
+      )
+) +
+      geom_errorbar(width = 0.2) +
+      geom_point(size = 3)
+
+ggplot(
+      CO2_summary,
+      aes(
+            x = Type,
+            ymin = mean_uptake - sd_uptake,
+            ymax = mean_uptake + sd_uptake
+      )
+) +
+      geom_linerange()
+
+ggplot(
+      CO2_summary,
+      aes(
+            x = Type,
+            y = mean_uptake,
+            ymin = mean_uptake - sd_uptake,
+            ymax = mean_uptake + sd_uptake
+      )
+) +
+      geom_pointrange()
+
 ## geom_abline(), geom_hline() un geom_vline()
 ggplot(CO2, aes(conc, uptake)) +
       geom_point() +
